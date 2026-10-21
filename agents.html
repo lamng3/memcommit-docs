@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agents and scopes — MemCommit Manual</title>
+<meta name="description" content="Share one memory between agents: scopes, sessions, and the blackboard.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html" aria-current="page">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Using MemCommit</p>
+<h1>Agents and scopes</h1>
+<p class="lede">Several agents can read each other&#x27;s memories as premises. Scopes decide who may read and write, and a blackboard coordinates the work.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#scopes">Scopes</a></li><li><a href="#the-blackboard">The blackboard</a></li><li><a href="#traces-and-handoffs">Traces and handoffs</a></li></ol></nav>
+<h2 id="scopes">Scopes</h2><p>A memory&#x27;s scope says who may read it. <code>shared</code> is for every agent; a scope named after an agent (<code>planner</code>) or under it (<code>planner/drafts</code>) is that agent&#x27;s own. An <code>AgentSession</code> reads <code>shared</code> plus the agent&#x27;s own scopes and stamps every write with the agent&#x27;s name.</p><pre><code>from memcommit import AgentSession, scope_guard
+
+store.guard(scope_guard)                       # an agent may put only into shared or its own scopes
+planner = AgentSession(store, &quot;planner&quot;, reads=[&quot;research&quot;])
+planner.put(&quot;plan&quot;, &quot;trip&quot;, {&quot;steps&quot;: [&quot;book&quot;]}, scope=&quot;planner/drafts&quot;)
+planner.find(kind=&quot;plan&quot;)</code></pre><p><code>scope_guard</code> is enforced at commit for every agent. The system agent may write anywhere.</p><h2 id="the-blackboard">The blackboard</h2><pre><code>from memcommit import Blackboard
+
+class Writer:
+    name = &quot;writer&quot;
+    consumes = frozenset({&quot;finding&quot;})
+
+    def handle(self, finding, tx, session):
+        tx.put(&quot;brief&quot;, finding.key, {&quot;text&quot;: &quot;...&quot;}, derived_from=[finding.id])
+
+board = Blackboard(store, [Researcher(), Writer()])
+board.run()</code></pre><p>Agents consume kinds of memory and write results. An agent&#x27;s results and a receipt commit together, so work is done exactly once, survives a restart, and is redone when its inputs go stale. An agent that names what it <code>produces</code> runs upstream of its consumers. A failing agent writes nothing but an <code>error</code> memory in its own scope.</p><h2 id="traces-and-handoffs">Traces and handoffs</h2><p><code>memcommit.trace(store, agent, task)</code> records a run as a root and a tree of typed steps (<code>thought</code>, <code>action</code>, <code>observation</code>, <code>message</code>, <code>result</code>, <code>error</code>). <code>t.handoff(agent, task)</code> starts another agent&#x27;s sub-trace derived from a message step. See <a href="sessions.html">Sessions</a> for the conversational form.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>

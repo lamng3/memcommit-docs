@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes — MemCommit Manual</title>
+<meta name="description" content="Derived memory: notes at paths, an index to read first, and five tools a model can call.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html" aria-current="page">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Using MemCommit</p>
+<h1>Notes</h1>
+<p class="lede">Notes are what was learned, short enough to read at the start of a session. Each records the episodes it came from.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#write-and-read-notes">Write and read notes</a></li><li><a href="#updates-supersede-deletes-retract">Updates supersede, deletes retract</a></li><li><a href="#the-index">The index</a></li><li><a href="#search-and-fetch">Search and fetch</a></li><li><a href="#tools-for-a-model">Tools for a model</a></li></ol></nav>
+<h2 id="write-and-read-notes">Write and read notes</h2><pre><code>from memcommit import Knowledge
+
+notes = Knowledge(store, &quot;assistant&quot;)
+notes.add(&quot;user/alice/city&quot;, &quot;Alice lives in Lyon.&quot;, tags=[&quot;profile&quot;], derived_from=[turn.id])
+notes.update(&quot;user/alice/city&quot;, &quot;Alice moved to Paris.&quot;)
+notes.read(&quot;user/alice/city&quot;)          # the live note
+notes.ls(&quot;user/alice&quot;)                 # live notes under a path
+notes.delete(&quot;user/alice/pet&quot;, &quot;it was wrong&quot;)</code></pre><p>A path is a note&#x27;s key. <code>add</code> raises if a live note is already there, and <code>update</code> raises if there is none.</p><h2 id="updates-supersede-deletes-retract">Updates supersede, deletes retract</h2><p>The log is immutable, so an update writes a new version and marks the old one stale. By default everything derived from the old version goes stale with it, since it was built on something that changed; pass <code>cascade=False</code> for a typo fix. Writing the same text again changes nothing. <code>delete</code> retracts: the note was wrong, and what was built on it falls too.</p><h2 id="the-index">The index</h2><pre><code>print(notes.index(max_chars=4000))</code></pre><pre><code># Memory index
+
+4 notes. Use search_memory to find more, fetch_memory to read one.
+
+## user/alice
+- city: alice lives in Lyon. [profile]
+- dog: alice&#x27;s dog is Rex. [profile]</code></pre><p>The index is generated on demand, by directory, with each note&#x27;s title (or first line) and tags. It is sized to a budget: the most important and most recent notes are kept first, and the tail says how many were left out. Inject it at the start of a session.</p><h2 id="search-and-fetch">Search and fetch</h2><pre><code>notes.search(&quot;where does alice live&quot;, k=5, where=&quot;derived&quot;)   # notes
+notes.search(&quot;allergic chicken&quot;, where=&quot;episodic&quot;)            # what was said and done
+notes.search(&quot;cat&quot;, where=&quot;all&quot;)                              # both, by score
+notes.fetch(&quot;user/alice/city&quot;)                                # a note, in full
+notes.fetch(session.id)                                       # a session id returns its transcript</code></pre><p><code>search</code> spans both tiers, so an agent can recover detail a note dropped. <code>fetch</code> takes a note path or any memory id.</p><h2 id="tools-for-a-model">Tools for a model</h2><p><code>notes.tools()</code> returns five tool specs, each with a <code>name</code>, a <code>description</code>, and an <code>input_schema</code>: <code>add_memory</code>, <code>update_memory</code>, <code>delete_memory</code>, <code>search_memory</code>, and <code>fetch_memory</code>. <code>notes.call(name, arguments, session=session)</code> runs one and, with a session, records the call and its result in it. The shape is provider-neutral; an adapter maps it to a provider&#x27;s format.</p><p><code>notes.take_reads()</code> returns the ids read since the last call, to pass as <code>used</code> to <code>session.agent_says</code>.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>

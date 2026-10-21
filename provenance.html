@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenance and invalidation — MemCommit Manual</title>
+<meta name="description" content="How derived_from drives invalidation, including reads that found nothing.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html" aria-current="page">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Internals</p>
+<h1>Provenance and invalidation</h1>
+<p class="lede">Provenance is the lever the rest of MemCommit pulls. When a premise goes bad, everything built on it goes stale in one transaction.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#derived-from">derived_from</a></li><li><a href="#retraction">Retraction</a></li><li><a href="#reads-are-provenance-too">Reads are provenance too</a></li><li><a href="#in-sessions-and-notes">In sessions and notes</a></li><li><a href="#memories-are-values">Memories are values</a></li></ol></nav>
+<h2 id="derived-from">derived_from</h2><p><code>derived_from</code> holds memory ids and outside references (<code>doc:handbook@3</code>, <code>file:sha256...</code>). <code>invalidate(refs, reason)</code> marks stale every live memory reachable through the reference index, in one transaction. A client that versions something outside the store (a document, a knowledge base, a model) records the version as a reference, and invalidating the version invalidates what was built on it.</p><h2 id="retraction">Retraction</h2><p>A commit that retracts a live memory marks stale everything built on it, directly or through a read whose result included it: work built on a premise that was withdrawn as wrong no longer holds. Memories written by the commit itself are left alone.</p><h2 id="reads-are-provenance-too">Reads are provenance too</h2><p>An answer derives from the memories it read, but it also depends on the ones it looked for and did not find. &quot;No notes about this topic&quot; is built on an empty read, and the first note must undo it. So a reference can name a read: <code>query_ref(&quot;note&quot;, topic=&quot;light&quot;)</code>. An agent derives from it next to the memories the read returned. When a commit brings a memory live, the store finds the reads that memory now belongs to and marks everything built on them stale, in the same transaction.</p><p>Only additions need this. A memory that drops out of a read was returned by it, so whatever used it already derives from it directly. Over-invalidation is cheap: work redone with the same result restores the same memory id.</p><h2 id="in-sessions-and-notes">In sessions and notes</h2><p>A reply records the memories it read in <code>derived_from</code>. A note records the session and turns it came from. A summary records the steps it folds. So retracting a spoofed session stales the notes learned from it and the replies that used those notes, with no extra code.</p><h2 id="memories-are-values">Memories are values</h2><p>A memory&#x27;s id hashes its kind, key, body, source, scope, importance, and <code>derived_from</code>. A body cannot be changed without its id changing, so tampering shows up on load and in <code>verify</code>.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>

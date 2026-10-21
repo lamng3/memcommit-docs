@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dreaming — MemCommit Manual</title>
+<meta name="description" content="An offline pass that turns finished sessions into notes and keeps the notes tidy.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html" aria-current="page">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Using MemCommit</p>
+<h1>Dreaming</h1>
+<p class="lede">An agent that saves notes by tool call only remembers what it thought to save. A dreaming pass finds what was implied, and maintains the store.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#run-a-pass">Run a pass</a></li><li><a href="#what-a-pass-does">What a pass does</a></li><li><a href="#extractors">Extractors</a></li><li><a href="#when-to-run">When to run</a></li><li><a href="#what-a-pass-records">What a pass records</a></li><li><a href="#repair-and-undo">Repair and undo</a></li></ol></nav>
+<h2 id="run-a-pass">Run a pass</h2><pre><code>from memcommit import Dreamer
+
+dreamer = Dreamer(store)                  # or Dreamer(store, extractor=my_model_extractor)
+dreamer.run(dry_run=True).changes         # what it would do, without writing
+report = dreamer.run()                    # do it
+dreamer.undo(report)                      # take it back, if nobody else has written since</code></pre><p>A pass reads the sessions that ended since the last pass, asks an extractor for the learnings in each, and writes them as notes derived from the session and the turns they came from. Then it maintains the store.</p><h2 id="what-a-pass-does">What a pass does</h2><table><thead><tr><th>Step</th><th>Effect</th></tr></thead><tbody><tr><td>Extract</td><td>Each learning becomes a note at its path, derived from the session and its source turns.</td></tr><tr><td>Conflicts</td><td>A learning whose path holds a different note replaces it. The old version goes stale, with what was built on it. The last statement in a session wins.</td></tr><tr><td>Duplicates</td><td>Live notes in the same directory with word overlap of at least 0.85 are merged: the most important is kept, the rest go to the archive.</td></tr><tr><td>Oversized</td><td>A note over <code>max_chars</code> (1200) is split at paragraph breaks into <code>-part-N</code> notes derived from it, and the original goes to the archive.</td></tr></tbody></table><h2 id="extractors">Extractors</h2><p>An <code>Extractor</code> is a function from a <code>Session</code> to a list of <code>Learning(path, text, title, tags, importance, sources)</code>. The built-in <code>heuristic_extractor</code> needs no model. It finds statements the user made about where they live, &quot;my X is Y&quot;, &quot;I prefer Y&quot;, and &quot;remember that Y&quot;, and it records a sequence of two or more tool calls that ended well as a playbook. The memory tools&#x27; own calls are not counted. A language model is a function with the same signature.</p><aside class="callout warning"><span class="label">Warning</span><p>The built-in extractor parses only the phrasings it has patterns for. On the synthetic benchmark it finds about half of the facts, and an oracle extractor finds all of them. See <a href="benchmarks.html">Benchmarks</a>. Pass a model-backed extractor for real use.</p></aside><h2 id="when-to-run">When to run</h2><pre><code>dreamer.due(min_sessions=3)       # have enough sessions ended?
+dreamer.attach(min_sessions=3)    # run a pass whenever enough sessions have ended</code></pre><p><code>memcommit dream memory.db</code> runs one from the command line, and <code>--dry-run</code> previews it.</p><h2 id="what-a-pass-records">What a pass records</h2><p>A pass writes a <code>dream</code> memory recording the log position it covered, derived from the sessions it read. The next pass starts from the highest position recorded, counting records of any status, so a pass whose source session was later retracted is not run again. <code>dreamer.watermark()</code> returns it.</p><h2 id="repair-and-undo">Repair and undo</h2><p>Every edit is a transaction with provenance. Retract a bad session and the notes learned from it go stale. <code>undo(report)</code> rolls the log back to before the pass using compensating records, so history is kept, and refuses if any other agent has written since. An undone pass is not retried automatically.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>

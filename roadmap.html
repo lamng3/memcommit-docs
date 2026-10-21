@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap — MemCommit Manual</title>
+<meta name="description" content="What is built, and what comes next.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html" aria-current="page">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Project</p>
+<h1>Roadmap</h1>
+<p class="lede">Every feature in the plan is built and tested. Next are the gaps the benchmarks found.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#built">Built</a></li><li><a href="#next">Next</a></li></ol></nav>
+<h2 id="built">Built</h2><p>The log-structured store, the declared structure, episodic sessions, derived notes with an index and agent tools, offline consolidation, the cache and its policies, compaction of memories and of the log, recall, the blackboard, audit, the server, a demo, and two benchmarks.</p><h2 id="next">Next</h2><ul><li><strong>A model-backed extractor.</strong> The built-in extractor finds about half the facts in the benchmark, and a perfect one reaches 1.000. A language model behind the <code>Extractor</code> signature is the largest open gain.</li><li><strong>Deduplication across paths.</strong> Near-duplicates are merged only within a directory.</li><li><strong>Meaning, not words.</strong> The lexical index cannot match a paraphrase that shares no words with the query. <code>VectorIndex</code> can; the benchmark does not yet test it.</li><li><strong>Recorded conversations.</strong> Both benchmarks are synthetic. The same harness should run on recorded conversations, with a model as reader.</li><li><strong>A provider adapter</strong> from <code>Knowledge.tools()</code> to a provider&#x27;s tool format.</li></ul><p>New work starts as an experiment: a recorded workload or a policy to compare, measured and written to <code>results/</code>.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sessions — MemCommit Manual</title>
+<meta name="description" content="Episodic memory: record conversations and tool calls as they happen.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html">MemCommit</a>
+  <label class="nav-button" for="nav-toggle">Menu</label>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html" aria-current="page">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Using MemCommit</p>
+<h1>Sessions</h1>
+<p class="lede">A session is a trace with conversational helpers. Every turn, tool call, and result is its own memory, committed as it happens.</p>
+<nav class="toc"><strong>On this page</strong><ol><li><a href="#record-a-session">Record a session</a></li><li><a href="#tool-calls">Tool calls</a></li><li><a href="#replies-derive-from-what-they-read">Replies derive from what they read</a></li><li><a href="#find-sessions">Find sessions</a></li><li><a href="#what-is-stored">What is stored</a></li></ol></nav>
+<h2 id="record-a-session">Record a session</h2><pre><code>from memcommit import Session
+
+with Session.start(store, &quot;assistant&quot;, user=&quot;alice&quot;) as session:
+    session.user_says(&quot;I live in Lyon.&quot;)
+    lookup = session.wrap(search_web, &quot;search_web&quot;)      # calls recorded with their results
+    lookup(query=&quot;weather in Lyon&quot;)
+    session.agent_says(&quot;Noted.&quot;)</code></pre><p>Leaving the block ends the session <code>ok</code>, or <code>error</code> if it raised. Each step commits on its own, so a crash keeps what was said. <code>Session.open(store, root_id)</code> reads one back, <code>session.transcript()</code> lists its turns, calls, and results in order, and <code>session.text()</code> renders them as text.</p><h2 id="tool-calls">Tool calls</h2><p><code>session.call(tool, arguments, run)</code> runs <code>run(**arguments)</code>, recording an <code>action</code> before and an <code>observation</code> after, or an <code>error</code> if it raised (and re-raising). <code>session.wrap(function, name)</code> returns the function with every call recorded, as a plugin would.</p><h2 id="replies-derive-from-what-they-read">Replies derive from what they read</h2><pre><code>session.agent_says(&quot;Alice lives in Lyon.&quot;, used=notes.take_reads())</code></pre><p><code>used</code> are the memories the reply was built on. If one is later retracted, the reply goes stale.</p><h2 id="find-sessions">Find sessions</h2><pre><code>from memcommit import Episodes
+
+episodes = Episodes(store)
+episodes.sessions(user=&quot;alice&quot;, ended=True)   # oldest first
+episodes.new_since(lsn)                        # sessions that ended after a point in the log</code></pre><p><code>new_since</code> is what an offline pass reads. See <a href="dreaming.html">Dreaming</a>.</p><h2 id="what-is-stored">What is stored</h2><p>A session is a <code>trace</code> root with the task <code>session</code> and the user in its inputs. User and agent turns are <code>message</code> steps with a <code>role</code>; calls are <code>action</code> steps; results are <code>observation</code> steps. Nothing is distilled away, so detail a summary dropped can still be fetched.</p>
+</main>
+</div>
+<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<script src="search.js"></script>
+</body>
+</html>
