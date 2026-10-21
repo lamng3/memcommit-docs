@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>Notes — MemCommit Manual</title>
 <meta name="description" content="Derived memory: notes at paths, an index to read first, and five tools a model can call.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -43,7 +52,7 @@ notes.fetch(&quot;user/alice/city&quot;)                                # a note
 notes.fetch(session.id)                                       # a session id returns its transcript</code></pre><p><code>search</code> spans both tiers, so an agent can recover detail a note dropped. <code>fetch</code> takes a note path or any memory id.</p><h2 id="tools-for-a-model">Tools for a model</h2><p><code>notes.tools()</code> returns five tool specs, each with a <code>name</code>, a <code>description</code>, and an <code>input_schema</code>: <code>add_memory</code>, <code>update_memory</code>, <code>delete_memory</code>, <code>search_memory</code>, and <code>fetch_memory</code>. <code>notes.call(name, arguments, session=session)</code> runs one and, with a session, records the call and its result in it. The shape is provider-neutral; an adapter maps it to a provider&#x27;s format.</p><p><code>notes.take_reads()</code> returns the ids read since the last call, to pass as <code>used</code> to <code>session.agent_says</code>.</p>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

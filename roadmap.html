@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>Roadmap — MemCommit Manual</title>
 <meta name="description" content="What is built, and what comes next.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -26,7 +35,7 @@
 <h2 id="built">Built</h2><p>The log-structured store, the declared structure, episodic sessions, derived notes with an index and agent tools, offline consolidation, the cache and its policies, compaction of memories and of the log, recall, the blackboard, audit, the server, a demo, and two benchmarks.</p><h2 id="next">Next</h2><ul><li><strong>A model-backed extractor.</strong> The built-in extractor finds about half the facts in the benchmark, and a perfect one reaches 1.000. A language model behind the <code>Extractor</code> signature is the largest open gain.</li><li><strong>Deduplication across paths.</strong> Near-duplicates are merged only within a directory.</li><li><strong>Meaning, not words.</strong> The lexical index cannot match a paraphrase that shares no words with the query. <code>VectorIndex</code> can; the benchmark does not yet test it.</li><li><strong>Recorded conversations.</strong> Both benchmarks are synthetic. The same harness should run on recorded conversations, with a model as reader.</li><li><strong>A provider adapter</strong> from <code>Knowledge.tools()</code> to a provider&#x27;s tool format.</li></ul><p>New work starts as an experiment: a recorded workload or a policy to compare, measured and written to <code>results/</code>.</p>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

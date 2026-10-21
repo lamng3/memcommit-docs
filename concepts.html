@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>Concepts — MemCommit Manual</title>
 <meta name="description" content="Memories, the log, status, tiers, and provenance.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -26,7 +35,7 @@
 <h2 id="memories">Memories</h2><p>A <code>Memory</code> is a JSON value with a <code>kind</code> (what sort of thing it is), a <code>key</code> (what it is about), a <code>body</code>, a <code>source</code> (the agent that wrote it), a <code>scope</code> (who may read it), an <code>importance</code>, and <code>derived_from</code> (what it was built on). Its id is a hash of all of that, so writing the same memory twice names the same memory, and work redone with the same result restores what was there.</p><h2 id="the-log">The log</h2><p>Every change is a record: <code>put</code>, <code>restore</code>, <code>stale</code>, <code>retract</code>, or <code>move</code>. Records are numbered (LSN) and grouped into transactions, which are all or nothing. The store&#x27;s state is a fold over the log, so <code>as_of(lsn)</code> rebuilds any past state, and rollback writes compensating records instead of erasing anything.</p><h2 id="status">Status</h2><p>Status says whether a memory holds.</p><table><thead><tr><th>Status</th><th>Meaning</th></tr></thead><tbody><tr><td><code>live</code></td><td>It holds.</td></tr><tr><td><code>stale</code></td><td>Something it was built on no longer holds. Redone work may bring it back.</td></tr><tr><td><code>retracted</code></td><td>It was wrong.</td></tr></tbody></table><h2 id="tier">Tier</h2><p>Tier says where a memory sits, which is what retrieval and policies act on.</p><table><thead><tr><th>Tier</th><th>Holds</th></tr></thead><tbody><tr><td><code>short</code></td><td>Working memory, bounded: new memories, an agent&#x27;s context. A cache.</td></tr><tr><td><code>mid</code></td><td>Optional: evicted memories grouped into segments (by trace).</td></tr><tr><td><code>long</code></td><td>Consolidated memories and summaries.</td></tr><tr><td><code>archive</code></td><td>Everything evicted or compacted. Searched on request; paged back in on use.</td></tr></tbody></table><p>Status and tier are independent: a stale long-term memory is still long-term.</p><h2 id="provenance">Provenance</h2><p><code>derived_from</code> names the memories (and outside references like <code>doc:handbook@3</code>) a memory was built on. When one of them goes stale or is retracted, everything built on it goes stale, transitively, in one transaction. A memory can also derive from a read (<code>query_ref</code>), so work that saw &quot;nothing known&quot; is redone when something becomes known. See <a href="provenance.html">Provenance</a>.</p><h2 id="two-kinds-of-memory">Two kinds of memory</h2><p>Episodic memory is the record: sessions, turns, and tool calls, as they happened. Derived memory is what was learned: notes at paths. A note names the episodes it came from, so the detail is one <code>fetch</code> away, and a bad episode takes its notes with it.</p>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

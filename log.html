@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>The log and the state — MemCommit Manual</title>
 <meta name="description" content="Records, transactions, guards, observers, and rollback.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -26,7 +35,7 @@
 <h2 id="records-and-state">Records and state</h2><p>A <code>Record</code> puts, restores, retracts, or marks stale one memory, or moves it between tiers, inside a transaction, by an agent, at a time. <code>State</code> applies records in LSN order and keeps three indexes: by (kind, key), from each reference to the memories derived from it, and from each kind to the reads over it. Replaying the log rebuilds exactly the state that wrote it, and <code>as_of(lsn)</code> is a replay that stops early.</p><h2 id="transactions">Transactions</h2><p>All writes go through <code>store.transaction(agent)</code>. A transaction that raises writes nothing. Rewriting a live memory is a no-op, and a put of a known memory is a restore. On commit the store numbers the records, asks every guard, appends them to the engine in one call, applies them to the state, and then tells every observer.</p><h2 id="guards-before-observers-after">Guards before, observers after</h2><p>Guards reject a commit before it happens: scopes, provenance, a declared schema, a defender&#x27;s checks. Observers react after it: caches, tier policies, schedulers. Neither may commit during a commit. An observer that wants to write calls <code>store.defer(work)</code>, and the store runs the work once the commit is done, in order.</p><h2 id="rollback-is-compensation">Rollback is compensation</h2><p><code>rollback_to(lsn)</code> computes the state at that LSN and writes the records that move every memory back to its status and tier there, as ARIES does. Nothing is erased, so the log still shows what happened and what undid it.</p><h2 id="engines">Engines</h2><table><thead><tr><th>Engine</th><th>Where the log lives</th></tr></thead><tbody><tr><td><code>MemoryEngine</code></td><td>A list, for tests.</td></tr><tr><td><code>JsonlEngine</code></td><td>One fsynced JSON line per transaction; a torn final line is dropped.</td></tr><tr><td><code>SqliteEngine</code></td><td>One SQLite transaction per commit, WAL journaling.</td></tr></tbody></table><p>Another backend subclasses <code>Engine</code> (two methods: <code>append</code> and <code>records</code>; <code>records_after</code> and <code>rewrite</code> have defaults it may speed up) and registers in <code>ENGINES</code>. An engine can keep the log in an RDF store, so provenance questions become SPARQL: <code>SELECT ?m WHERE { ?m &lt;urn:memcommit:derivedFrom&gt; &lt;urn:memcommit:m:4e33527c048490ae&gt; . }</code>.</p>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

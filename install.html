@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>Install and run the demo — MemCommit Manual</title>
 <meta name="description" content="Install MemCommit and run the end-to-end demo.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -43,7 +52,7 @@ python examples/memory_benchmark.py              # writes results/memory/
 python examples/policy_benchmark.py              # writes results/policies/</code></pre>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

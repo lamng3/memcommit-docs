@@ -3,15 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <title>The database underneath — MemCommit Manual</title>
 <meta name="description" content="Log compaction, retention, snapshots, seals, and the server.">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
@@ -30,7 +39,7 @@ print(report.before, &quot;-&gt;&quot;, report.after, &quot;records; purged&quot
 store = memcommit.open(&quot;memory.db&quot;, snapshot=&quot;state.json&quot;)   # replays only the records after it</code></pre><p>A snapshot is the state as JSON. Opening from one reads only the records after it.</p><h2 id="seals">Seals</h2><p><code>seal(store)</code> writes a hash chain over the log up to an LSN; <code>AutoSeal(store, every=1000)</code> seals every N records; <code>check_seal</code> rechecks the newest and <code>verify</code> rechecks all of them after the last compaction. Compaction invalidates every earlier seal by design, so the manifest stores the old log&#x27;s chain and a new seal covers the new log.</p><h2 id="one-writer-many-readers">One writer, many readers</h2><p>LSNs must come from one place. <code>python -m memcommit serve memory.db</code> runs a <code>MemoryServer</code> that owns the log and runs every commit, so guards hold across processes. <code>RemoteStore(url)</code> is a <code>MemoryStore</code> on it, and <code>store.refresh()</code> pulls commits other processes made. A refused commit raises <code>Rejected</code> in the client. <code>AsyncMemoryStore</code> commits in a worker thread, one at a time, for an event loop.</p>
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
 <script src="search.js"></script>
 </body>
 </html>

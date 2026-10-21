@@ -168,7 +168,76 @@ def render_body(md):
     return "".join(html_parts), toc
 
 
+HEAD = """<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">"""
+
+HEADER = """<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="api.html">API</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
+</header>"""
+
+FOOTER = (
+    '<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · '
+    "a transactional memory layer for agents · "
+    '<a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>'
+)
+
+CARDS = [
+    ("structure", "Declare a structure", "Kinds, scopes, and what must derive from what; every write is checked."),
+    ("sessions", "Record sessions", "Each turn, tool call, and result is its own memory, committed as it happens."),
+    ("notes", "Keep notes", "Notes at paths, a generated index, five tools a model can call."),
+    ("dreaming", "Consolidate offline", "Extract, supersede, merge, split, and undo a whole pass."),
+    ("provenance", "Invalidate by provenance", "Retract a premise and everything built on it goes stale."),
+    ("benchmarks", "Check the claims", "A benchmark that says where the library helps and where it does not."),
+]
+
+HOME = """<section class="hero">
+  <div>
+    <h1>A transactional memory layer for agents</h1>
+    <p class="lede">{lede}</p>
+    <pre class="install"><span class="prompt">$ </span>git clone https://github.com/lamng3/memcommit.git &amp;&amp; cd memcommit
+<span class="prompt">$ </span>pip install -e . &amp;&amp; memcommit demo</pre>
+    <div class="actions">
+      <a class="btn solid" href="install.html">Get started</a>
+      <a class="btn" href="concepts.html">Concepts</a>
+      <a class="btn" href="decisions.html">Decisions</a>
+    </div>
+  </div>
+  <div class="demo-card" id="demo">
+    <div class="head"><h3>Time-travel a real memory log</h3><span class="tag">replay of <b>a real run</b></span></div>
+    <div class="mems" id="mems"></div>
+    <div class="slider"><span>lsn</span><input id="lsn" type="range" min="0" max="0" value="0" aria-label="Log position"><span id="lsn-out">0</span></div>
+    <p class="logline" id="logline"></p>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn" id="retract" disabled>Retract selected</button>
+      <button class="btn" id="undo" disabled>Roll back</button>
+      <button class="btn" id="reset">Reset</button>
+    </div>
+    <p class="note">Pick a memory, then retract it: everything derived from it goes stale, in one transaction. Drag the slider to see the state at any log position. The log and the cascade come from the library; this page only replays them.</p>
+  </div>
+</section>
+<section class="block">
+  <h2>What it does</h2>
+  <p class="sub">One append-only log holds what agents did and what they learned. Everything else is a fold over it.</p>
+  <div class="cards">{cards}</div>
+</section>
+<section class="block"><div class="prose-home">{body}</div></section>
+<script src="demo.js"></script>"""
+
+
 def page_html(meta, body_html, toc, pages):
+    if meta["slug"] == "index":
+        return home_html(meta, body_html)
     nav = [
         '<a class="brand-desk" href="index.html">MemCommit Manual</a>',
         '<input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off">',
@@ -190,18 +259,13 @@ def page_html(meta, body_html, toc, pages):
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{HEAD}
 <title>{title} — MemCommit Manual</title>
 <meta name="description" content="{html.escape(meta.get("description", ""))}">
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header class="top">
-  <a class="brand" href="index.html">MemCommit</a>
-  <label class="nav-button" for="nav-toggle">Menu</label>
-</header>
+{HEADER}
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
 <nav class="nav">
@@ -215,8 +279,34 @@ def page_html(meta, body_html, toc, pages):
 {body_html}
 </main>
 </div>
-<footer class="site">MemCommit Manual. MemCommit is a transactional memory layer for agents: an append-only log of memories with provenance, tiers, and offline consolidation.</footer>
+{FOOTER}
 <script src="search.js"></script>
+</body>
+</html>
+"""
+
+
+def home_html(meta, body_html):
+    cards = "".join(
+        f'<a class="card" href="{slug}.html"><strong>{html.escape(t)}</strong><span>{html.escape(d)}</span></a>'
+        for slug, t, d in CARDS
+    )
+    hero = HOME.format(lede=inline(meta.get("lede", "")), cards=cards, body=body_html)
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+{HEAD}
+<title>MemCommit — a transactional memory layer for agents</title>
+<meta name="description" content="{html.escape(meta.get("description", ""))}">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+{HEADER}
+<main class="wrap" id="content" style="max-width:1280px">
+{hero}
+</main>
+{FOOTER}
 </body>
 </html>
 """
