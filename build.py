@@ -181,7 +181,7 @@ HEADER = """<header class="site">
   <nav class="site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
-    <a href="api.html">API</a>
+    <a href="playground.html">Playground</a>
     <label class="nav-button" for="nav-toggle">Menu</label>
     <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
   </nav>
@@ -193,6 +193,7 @@ FOOTER = (
 )
 
 CARDS = [
+    ("playground", "Playground", "Write memories into a log in the browser, retract a premise, and watch the cascade."),
     ("structure", "Declare a structure", "Kinds, scopes, and what must derive from what; every write is checked."),
     ("sessions", "Record sessions", "Each turn, tool call, and result is its own memory, committed as it happens."),
     ("notes", "Keep notes", "Notes at paths, a generated index, five tools a model can call."),
@@ -210,7 +211,7 @@ HOME = """<section class="hero">
     <div class="actions">
       <a class="btn solid" href="install.html">Get started</a>
       <a class="btn" href="concepts.html">Concepts</a>
-      <a class="btn" href="decisions.html">Decisions</a>
+      <a class="btn" href="playground.html">Playground</a>
     </div>
   </div>
   <div class="demo-card" id="demo">

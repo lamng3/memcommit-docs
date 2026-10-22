@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<title>Playground — MemCommit Manual</title>
+<meta name="description" content="Write memories into an append-only log in the browser, retract a premise, and watch what was built on it go stale.">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site">
+  <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
+  <nav class="site" aria-label="Site">
+    <a href="install.html">Install</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="playground.html">Playground</a>
+    <label class="nav-button" for="nav-toggle">Menu</label>
+    <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
+  </nav>
+</header>
+<input id="nav-toggle" class="nav-toggle" type="checkbox">
+<div class="layout">
+<nav class="nav" aria-label="Manual pages">
+<a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><a href="playground.html" aria-current="page">Playground</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><a href="leaderboard.html">Leaderboard</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
+</nav>
+<main id="content">
+<p class="kicker">Try it</p>
+<h1>Playground</h1>
+<p class="lede">Write memories into an append-only log, say what each was derived from, retract a premise, and watch what was built on it go stale. Drag the log back in time, or roll it back.</p>
+<nav class="toc" aria-label="On this page"><strong>On this page</strong><ol><li><a href="#things-to-try">Things to try</a></li><li><a href="#what-it-keeps">What it keeps</a></li></ol></nav>
+<div class="callout warning" role="note"><span class="label">Warning</span><p>This playground runs a <strong>JavaScript port of MemCommit&#x27;s core</strong>, not the library. MemCommit is Python. The port covers content-addressed memories, restore on rewrite, retraction and invalidation with their cascades, rollback by compensating records, and <code>as_of</code>, and its tests replay scenarios recorded from the Python library and compare every id and log record. It does not port query references, guards, tiers beyond the first, or sessions, notes, and dreaming. For those, run <code>memcommit demo</code> (<a href="install.html">Install</a>).</p></div><div role="group" id="mplay" aria-label="Memory log playground">Loading the playground…</div><script src="pg.js"></script><script src="playground.js"></script><h2 id="things-to-try">Things to try</h2><ol><li><strong>Load the demo</strong> and retract the first episode (it was wrong). It is withdrawn as a premise, and everything live built on it goes stale in the same transaction; the unrelated episode stays live. <strong>Mark stale</strong> is the softer version for something that is merely outdated. That is <a href="provenance.html">provenance</a>.</li><li><strong>Write the same memory twice.</strong> A live memory with identical content is not written again. Write one that was retracted and it is restored: the id is a hash of the content, so redoing work that comes out the same names the same memory.</li><li><strong>Drag the slider back</strong> to see the state at an earlier log position, then press <strong>Roll back</strong>. The log is not rewritten: compensating records are appended, as in ARIES.</li><li><strong>Export the log</strong> to read it as JSON.</li></ol><h2 id="what-it-keeps">What it keeps</h2><p>The operations you perform are saved in this browser (localStorage) and replayed when the page loads, so the log is the same after a reload. Clear the log to start again. Nothing is sent anywhere.</p>
+<nav class="pager" aria-label="Pages"><a class="prev" href="concepts.html"><span>Previous</span>Concepts</a><a class="next" href="structure.html"><span>Next</span>Declare a memory structure</a></nav>
+</main>
+</div>
+<footer class="site">MemCommit Manual. A transactional memory layer for agents, by <a href="https://github.com/lamng3">Lam Nguyen</a> · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
+<script src="search.js"></script>
+</body>
+</html>
