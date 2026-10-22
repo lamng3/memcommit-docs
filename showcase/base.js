@@ -3,6 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 function h(tag, attrs = {}, ...kids) {
   const el = document.createElement(tag);
+  if (tag === "button") el.type = "button";
   for (const [k, v] of Object.entries(attrs || {})) {
     if (k === "class") el.className = v;
     else if (k === "html") el.innerHTML = v;
