@@ -294,3 +294,4 @@ main:has(.pg) { max-width: none; }
 .chip.live { background: var(--primary-10); color: var(--primary); } .chip.stale { background: var(--warn-bg); color: var(--warn); } .chip.retracted { background: var(--bad-bg); color: var(--bad); }
 .pg-table tr.now td { background: var(--primary-5); }
 .pg input[type="range"] { accent-color: var(--primary); }
+.pg progress { accent-color: var(--primary); width: 10em; height: 8px; }
