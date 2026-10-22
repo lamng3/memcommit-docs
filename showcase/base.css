@@ -112,3 +112,6 @@ code { font-family: var(--mono); font-size: 0.9em; }
 footer.site { max-width: 1180px; margin: 40px auto 0; padding: 20px 24px 40px; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--subtle); }
 footer.site p { margin: 0 0 6px; }
 @media (max-width: 700px) { nav.site a:not(.pill) { display: none; } .wrap, header.site { padding-left: 16px; padding-right: 16px; } }
+
+.btn.solid:hover:not(:disabled) { background: var(--primary); color: var(--bg); filter: brightness(1.12); }
+.btn.solid:disabled { opacity: 0.5; }
