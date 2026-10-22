@@ -25,6 +25,10 @@ function tabs(onShow = {}) {
     history.replaceState(null, "", "#" + id);
   };
   buttons.forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
+  window.addEventListener("hashchange", () => {
+    const id = location.hash.slice(1);
+    if (buttons.some((b) => b.dataset.tab === id)) { show(id); scrollTo({ top: 0 }); }
+  });
   const start = location.hash.slice(1);
   show(buttons.some((b) => b.dataset.tab === start) ? start : buttons[0].dataset.tab);
 }
