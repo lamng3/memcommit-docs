@@ -49,6 +49,7 @@ class Writer:
 
 board = Blackboard(store, [Researcher(), Writer()])
 board.run()</code></pre><p>Agents consume kinds of memory and write results. An agent&#x27;s results and a receipt commit together, so work is done exactly once, survives a restart, and is redone when its inputs go stale. An agent that names what it <code>produces</code> runs upstream of its consumers. A failing agent writes nothing but an <code>error</code> memory in its own scope.</p><h2 id="traces-and-handoffs">Traces and handoffs</h2><p><code>memcommit.trace(store, agent, task)</code> records a run as a root and a tree of typed steps (<code>thought</code>, <code>action</code>, <code>observation</code>, <code>message</code>, <code>result</code>, <code>error</code>). <code>t.handoff(agent, task)</code> starts another agent&#x27;s sub-trace derived from a message step. See <a href="sessions.html">Sessions</a> for the conversational form.</p>
+<nav class="pager" aria-label="Pages"><a class="prev" href="tiers.html"><span>Previous</span>Working memory</a><a class="next" href="audit.html"><span>Next</span>Audit and defense</a></nav>
 </main>
 </div>
 <footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>

@@ -44,6 +44,7 @@ with Session.start(store, &quot;assistant&quot;, user=&quot;alice&quot;) as sess
 episodes = Episodes(store)
 episodes.sessions(user=&quot;alice&quot;, ended=True)   # oldest first
 episodes.new_since(lsn)                        # sessions that ended after a point in the log</code></pre><p><code>new_since</code> is what an offline pass reads. See <a href="dreaming.html">Dreaming</a>.</p><h2 id="what-is-stored">What is stored</h2><p>A session is a <code>trace</code> root with the task <code>session</code> and the user in its inputs. User and agent turns are <code>message</code> steps with a <code>role</code>; calls are <code>action</code> steps; results are <code>observation</code> steps. Nothing is distilled away, so detail a summary dropped can still be fetched.</p>
+<nav class="pager" aria-label="Pages"><a class="prev" href="structure.html"><span>Previous</span>Declare a memory structure</a><a class="next" href="notes.html"><span>Next</span>Notes</a></nav>
 </main>
 </div>
 <footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>

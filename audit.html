@@ -38,6 +38,7 @@
 affected = blast_radius(store, [bad_observation.id])    # what the bad observation reached
 quarantine(store, [bad_observation.id], &quot;tool was compromised&quot;)
 assert verify(store) == []</code></pre><p>The agents on a blackboard then redo only the work that went stale. Because notes and replies record what they were derived from, the same repair reaches <a href="notes.html">notes</a> learned from a spoofed session.</p><h2 id="why-it-works">Why it works</h2><p>Memories are content-addressed, so an altered body no longer hashes to its id. The log is append-only, so <code>verify</code> can replay it for what a well-behaved store could not have written. Provenance is a graph, so the reach of a bad memory is a query. See <a href="provenance.html">Provenance</a>.</p>
+<nav class="pager" aria-label="Pages"><a class="prev" href="agents.html"><span>Previous</span>Agents and scopes</a><a class="next" href="cli.html"><span>Next</span>Command line</a></nav>
 </main>
 </div>
 <footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · a transactional memory layer for agents · <a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>
