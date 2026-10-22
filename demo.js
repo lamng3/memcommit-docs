@@ -60,6 +60,7 @@
         var m = id === picked ? "retract" : "stale";
         extra.push({ lsn: base + extra.length + 1, txn: 99, op: m, id: id, note: m === "retract" ? "retracted by you" : "derived from what was retracted", reason: "" });
       });
+      el("lsn").max = records().length; // raise the max first, or the browser clamps the value to the old one
       el("lsn").value = records().length;
       picked = null;
       render();
