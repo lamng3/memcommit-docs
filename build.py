@@ -188,8 +188,7 @@ HEADER = """<header class="site">
 </header>"""
 
 FOOTER = (
-    '<footer class="site">MemCommit by <a href="https://github.com/lamng3">Lam Nguyen</a> · '
-    "a transactional memory layer for agents · "
+    '<footer class="site">MemCommit Manual. A transactional memory layer for agents, by <a href="https://github.com/lamng3">Lam Nguyen</a> · '
     '<a href="https://github.com/lamng3/memcommit-docs">edit this manual</a></footer>'
 )
 
