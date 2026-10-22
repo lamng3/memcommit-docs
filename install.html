@@ -15,7 +15,7 @@
 <a class="skip" href="#content">Skip to content</a>
 <header class="site">
   <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
-  <nav class="site">
+  <nav class="site" aria-label="Site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
     <a href="api.html">API</a>
@@ -25,14 +25,14 @@
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
-<nav class="nav">
+<nav class="nav" aria-label="Manual pages">
 <a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html" aria-current="page">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><a href="leaderboard.html">Leaderboard</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
 </nav>
 <main id="content">
 <p class="kicker">Getting started</p>
 <h1>Install and run the demo</h1>
 <p class="lede">Python 3.11 or newer, no runtime dependencies. The demo shows the whole loop in a few seconds.</p>
-<nav class="toc"><strong>On this page</strong><ol><li><a href="#install">Install</a></li><li><a href="#run-the-demo">Run the demo</a></li><li><a href="#use-it-from-python">Use it from Python</a></li><li><a href="#tests">Tests</a></li></ol></nav>
+<nav class="toc" aria-label="On this page"><strong>On this page</strong><ol><li><a href="#install">Install</a></li><li><a href="#run-the-demo">Run the demo</a></li><li><a href="#use-it-from-python">Use it from Python</a></li><li><a href="#tests">Tests</a></li></ol></nav>
 <h2 id="install">Install</h2><pre><code>git clone https://github.com/lamng3/memcommit.git
 cd memcommit
 pip install -e &quot;.[dev]&quot;</code></pre><p><code>[dev]</code> adds pytest and ruff. The library itself has no dependencies.</p><h2 id="run-the-demo">Run the demo</h2><pre><code>memcommit demo</code></pre><p>A scripted assistant talks to users over several sessions. The demo walks through eight steps:</p><ol><li>The structure is declared once, and every write is checked against it.</li><li>Two users talk to the assistant; it keeps the full record of each session.</li><li>Dreaming: an offline pass extracts what was implied, with provenance back to the turns.</li><li>The next session starts with the index, then answers from notes.</li><li>A fact changes; the pass supersedes the note, and what was built on the old one goes stale.</li><li>An episode turns out to be spoofed; the notes learned from it go stale.</li><li>A synthetic benchmark answers whether memory helps.</li><li>The record verifies.</li></ol><p><code>memcommit demo --path demo.db</code> keeps the store, so you can inspect it afterwards with <a href="cli.html">the command line</a>.</p><h2 id="use-it-from-python">Use it from Python</h2><pre><code>import memcommit

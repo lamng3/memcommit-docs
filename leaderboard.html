@@ -15,7 +15,7 @@
 <a class="skip" href="#content">Skip to content</a>
 <header class="site">
   <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
-  <nav class="site">
+  <nav class="site" aria-label="Site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
     <a href="api.html">API</a>
@@ -25,14 +25,14 @@
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
-<nav class="nav">
+<nav class="nav" aria-label="Manual pages">
 <a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><a href="leaderboard.html" aria-current="page">Leaderboard</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
 </nav>
 <main id="content">
 <p class="kicker">Reference</p>
 <h1>Leaderboard</h1>
 <p class="lede">The memory benchmark as a leaderboard: each configuration ranked by accuracy, with the words it read and the log it kept.</p>
-<nav class="toc"><strong>On this page</strong><ol><li><a href="#how-to-read-it">How to read it</a></li></ol></nav>
+<nav class="toc" aria-label="On this page"><strong>On this page</strong><ol><li><a href="#how-to-read-it">How to read it</a></li></ol></nav>
 <p>The board is honest about where the library stands. Reading the whole history answers everything but costs the most words. Searching the episodic record answers about 96% of questions from about 20 words. The notes a rule-based extractor writes reach about 49%, and the oracle rows show the same pipeline reaching 100% when the extractor is perfect, so extraction quality is the limit, not the pipeline.</p><div data-arena data-src="leaderboard-data.json"></div><script src="arena.js"></script><h2 id="how-to-read-it">How to read it</h2><ul><li><strong>Accuracy</strong> is the share of questions answered correctly, over the users and seeds shown.</li><li><strong>Reference</strong> rows are the two ends: no memory at all, and the full history in context.</li><li><strong>Oracle</strong> rows run an extractor that sees the truth. They are upper bounds for the notes pipeline, not results.</li><li>Click a column to sort. Ranks stay with accuracy, so a sort does not change who is first.</li></ul><p>See <a href="benchmarks.html">Benchmarks</a> for the protocol and its caveats, including that the paraphrases favour lexical search.</p>
 <nav class="pager" aria-label="Pages"><a class="prev" href="benchmarks.html"><span>Previous</span>Benchmarks</a><a class="next" href="log.html"><span>Next</span>The log and the state</a></nav>
 </main>

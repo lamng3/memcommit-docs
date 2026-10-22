@@ -15,7 +15,7 @@
 <a class="skip" href="#content">Skip to content</a>
 <header class="site">
   <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
-  <nav class="site">
+  <nav class="site" aria-label="Site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
     <a href="api.html">API</a>
@@ -25,14 +25,14 @@
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
-<nav class="nav">
+<nav class="nav" aria-label="Manual pages">
 <a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><a href="leaderboard.html">Leaderboard</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html" aria-current="page">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
 </nav>
 <main id="content">
 <p class="kicker">Internals</p>
 <h1>The database underneath</h1>
 <p class="lede">MemCommit is a log-structured store, and it borrows a database&#x27;s answers to a database&#x27;s problems.</p>
-<nav class="toc"><strong>On this page</strong><ol><li><a href="#two-levels-of-compaction">Two levels of compaction</a></li><li><a href="#retention">Retention</a></li><li><a href="#snapshots">Snapshots</a></li><li><a href="#seals">Seals</a></li><li><a href="#one-writer-many-readers">One writer, many readers</a></li></ol></nav>
+<nav class="toc" aria-label="On this page"><strong>On this page</strong><ol><li><a href="#two-levels-of-compaction">Two levels of compaction</a></li><li><a href="#retention">Retention</a></li><li><a href="#snapshots">Snapshots</a></li><li><a href="#seals">Seals</a></li><li><a href="#one-writer-many-readers">One writer, many readers</a></li></ol></nav>
 <h2 id="two-levels-of-compaction">Two levels of compaction</h2><p>Memory compaction decides what agents see: finished traces fold into summaries, cold mid-term segments consolidate, summaries of the same task merge. It never deletes; it moves memories to the archive.</p><p>Log compaction decides what the disk holds. A memory&#x27;s history can be long (put, stale, restore, stale, move), but replaying its state needs three records: the put, the last status change, and the last move. <code>storage.compact</code> keeps exactly those, as the original records, up to a horizon, and keeps every record after the horizon verbatim, so the folded log replays to the same state. That is the LSM move: rewrite the sorted history into something smaller that answers the same reads. The price is history inside the horizon.</p><pre><code>from memcommit.storage import ArchivedOlderThan, compact
 
 report = compact(store, retention=ArchivedOlderThan(seconds=30 * 86400))

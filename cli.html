@@ -15,7 +15,7 @@
 <a class="skip" href="#content">Skip to content</a>
 <header class="site">
   <a class="logo" href="index.html"><span class="logo-mark">M</span><span>Mem<b>Commit</b></span></a>
-  <nav class="site">
+  <nav class="site" aria-label="Site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
     <a href="api.html">API</a>
@@ -25,15 +25,15 @@
 </header>
 <input id="nav-toggle" class="nav-toggle" type="checkbox">
 <div class="layout">
-<nav class="nav">
+<nav class="nav" aria-label="Manual pages">
 <a class="brand-desk" href="index.html">MemCommit Manual</a><input class="search" id="q" type="search" placeholder="Search the manual" autocomplete="off"><ul id="results" hidden></ul><p class="nav-part">Getting started</p><a href="index.html">Introduction</a><a href="install.html">Install and run the demo</a><a href="concepts.html">Concepts</a><p class="nav-part">Using MemCommit</p><a href="structure.html">Declare a memory structure</a><a href="sessions.html">Sessions</a><a href="notes.html">Notes</a><a href="dreaming.html">Dreaming</a><a href="recall.html">Search and recall</a><a href="tiers.html">Working memory</a><a href="agents.html">Agents and scopes</a><a href="audit.html">Audit and defense</a><p class="nav-part">Reference</p><a href="cli.html" aria-current="page">Command line</a><a href="api.html">API at a glance</a><a href="benchmarks.html">Benchmarks</a><a href="leaderboard.html">Leaderboard</a><p class="nav-part">Internals</p><a href="log.html">The log and the state</a><a href="provenance.html">Provenance and invalidation</a><a href="storage.html">The database underneath</a><p class="nav-part">Project</p><a href="decisions.html">Decisions</a><a href="roadmap.html">Roadmap</a>
 </nav>
 <main id="content">
 <p class="kicker">Reference</p>
 <h1>Command line</h1>
 <p class="lede">Every command takes a store path; the suffix picks the engine (.db for SQLite, .jsonl for JSON lines).</p>
-<nav class="toc"><strong>On this page</strong><ol><li><a href="#commands">Commands</a></li><li><a href="#example">Example</a></li></ol></nav>
-<h2 id="commands">Commands</h2><table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>memcommit demo [--path demo.db]</code></td><td>Run the end-to-end sample agent. With <code>--path</code>, keep its store.</td></tr><tr><td><code>memcommit index memory.db [--agent assistant] [--max-chars 4000]</code></td><td>Print the catalog of notes.</td></tr><tr><td><code>memcommit search memory.db &quot;query&quot; [--where W] [-k 5] [--agent assistant]</code></td><td>Search notes, episodes, or both; prints JSON. <code>W</code> is <code>derived</code> (default), <code>episodic</code>, or <code>all</code>.</td></tr><tr><td><code>memcommit dream memory.db [--dry-run]</code></td><td>Run an offline consolidation pass; lists each change.</td></tr><tr><td><code>memcommit verify memory.db</code></td><td>Replay the log and report problems. Prints <code>ok</code>; exits 1 on problems.</td></tr><tr><td><code>memcommit stats memory.db</code></td><td>Counts by status, tier, and kind.</td></tr><tr><td><code>memcommit compact memory.db [--retain-archive-seconds N]</code></td><td>Fold the log, purging old archived memories if asked.</td></tr><tr><td><code>memcommit serve memory.db [--host 127.0.0.1] [--port 7340] [--snapshot state.json]</code></td><td>Serve a store to agents in other processes.</td></tr></tbody></table><p><code>python -m memcommit</code> is the same command.</p><h2 id="example">Example</h2><pre><code>memcommit demo --path demo.db
+<nav class="toc" aria-label="On this page"><strong>On this page</strong><ol><li><a href="#commands">Commands</a></li><li><a href="#example">Example</a></li></ol></nav>
+<h2 id="commands">Commands</h2><table><thead><tr><th scope="col">Command</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>memcommit demo [--path demo.db]</code></td><td>Run the end-to-end sample agent. With <code>--path</code>, keep its store.</td></tr><tr><td><code>memcommit index memory.db [--agent assistant] [--max-chars 4000]</code></td><td>Print the catalog of notes.</td></tr><tr><td><code>memcommit search memory.db &quot;query&quot; [--where W] [-k 5] [--agent assistant]</code></td><td>Search notes, episodes, or both; prints JSON. <code>W</code> is <code>derived</code> (default), <code>episodic</code>, or <code>all</code>.</td></tr><tr><td><code>memcommit dream memory.db [--dry-run]</code></td><td>Run an offline consolidation pass; lists each change.</td></tr><tr><td><code>memcommit verify memory.db</code></td><td>Replay the log and report problems. Prints <code>ok</code>; exits 1 on problems.</td></tr><tr><td><code>memcommit stats memory.db</code></td><td>Counts by status, tier, and kind.</td></tr><tr><td><code>memcommit compact memory.db [--retain-archive-seconds N]</code></td><td>Fold the log, purging old archived memories if asked.</td></tr><tr><td><code>memcommit serve memory.db [--host 127.0.0.1] [--port 7340] [--snapshot state.json]</code></td><td>Serve a store to agents in other processes.</td></tr></tbody></table><p><code>python -m memcommit</code> is the same command.</p><h2 id="example">Example</h2><pre><code>memcommit demo --path demo.db
 memcommit stats demo.db
 memcommit index demo.db
 memcommit search demo.db &quot;dog&quot; --where all
