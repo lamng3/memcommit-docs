@@ -295,3 +295,6 @@ main:has(.pg) { max-width: none; }
 .pg-table tr.now td { background: var(--primary-5); }
 .pg input[type="range"] { accent-color: var(--primary); }
 .pg progress { accent-color: var(--primary); width: 10em; height: 8px; }
+
+/* The Showcase tab leads to the step-by-step visualizer, a separate site: make it read as a destination. */
+nav.site a.tab-showcase { color: var(--primary); font-weight: 600; }

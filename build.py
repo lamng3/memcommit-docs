@@ -15,6 +15,9 @@ CONTENT = ROOT / "content"
 
 PARTS = ["Getting started", "Using MemCommit", "Reference", "Internals", "Project"]
 
+# The step-by-step visualizer is its own site (memcommit-visualization), served under the manual's path by lamng3.com.
+WALKTHROUGH = "https://lamng3.com/memcommit/visualize/"
+
 CALLOUTS = {
     "today": "Status",
     "next": "Planned",
@@ -182,10 +185,13 @@ HEADER = """<header class="site">
     <a href="install.html">Install</a>
     <a href="concepts.html">Concepts</a>
     <a href="playground.html">Playground</a>
+    <a href="__WALKTHROUGH__" class="tab-showcase">Showcase</a>
     <label class="nav-button" for="nav-toggle">Menu</label>
     <a href="https://github.com/lamng3/memcommit" class="pill">GitHub ↗</a>
   </nav>
 </header>"""
+
+HEADER = HEADER.replace("__WALKTHROUGH__", WALKTHROUGH)
 
 FOOTER = (
     '<footer class="site">MemCommit Manual. A transactional memory layer for agents, by <a href="https://github.com/lamng3">Lam Nguyen</a> · '
@@ -193,6 +199,7 @@ FOOTER = (
 )
 
 CARDS = [
+    (WALKTHROUGH, "Showcase: visual walkthrough", "Step through the real code line by line: a write, a stale cascade, rollback, compaction, and where memory lives."),
     ("playground", "Playground", "Write memories into a log in the browser, retract a premise, and watch the cascade."),
     ("structure", "Declare a structure", "Kinds, scopes, and what must derive from what; every write is checked."),
     ("sessions", "Record sessions", "Each turn, tool call, and result is its own memory, committed as it happens."),
@@ -212,6 +219,7 @@ HOME = """<section class="hero">
       <a class="btn solid" href="install.html">Get started</a>
       <a class="btn" href="concepts.html">Concepts</a>
       <a class="btn" href="playground.html">Playground</a>
+      <a class="btn" href="__WALKTHROUGH__">Showcase</a>
     </div>
   </div>
   <div class="demo-card" id="demo">
@@ -253,6 +261,8 @@ def page_html(meta, body_html, toc, pages):
         for page in members:
             current = ' aria-current="page"' if page["slug"] == meta["slug"] else ""
             nav.append(f'<a href="{page["slug"]}.html"{current}>{html.escape(page["title"])}</a>')
+        if part == "Getting started":
+            nav.append(f'<a href="{WALKTHROUGH}">Showcase: visual walkthrough ↗</a>')
     toc_html = ""
     if toc:
         items = "".join(f'<li><a href="#{slug}">{html.escape(title)}</a></li>' for slug, title in toc)
@@ -290,10 +300,10 @@ def page_html(meta, body_html, toc, pages):
 
 def home_html(meta, body_html):
     cards = "".join(
-        f'<a class="card" href="{slug}.html"><strong>{html.escape(t)}</strong><span>{html.escape(d)}</span></a>'
+        f'<a class="card" href="{slug if slug.startswith("http") else slug + ".html"}"><strong>{html.escape(t)}</strong><span>{html.escape(d)}</span></a>'
         for slug, t, d in CARDS
     )
-    hero = HOME.format(lede=inline(meta.get("lede", "")), cards=cards, body=body_html)
+    hero = HOME.replace("__WALKTHROUGH__", WALKTHROUGH).format(lede=inline(meta.get("lede", "")), cards=cards, body=body_html)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
