@@ -298,3 +298,10 @@ main:has(.pg) { max-width: none; }
 
 /* The Showcase tab leads to the step-by-step visualizer, a separate site: make it read as a destination. */
 nav.site a.tab-showcase { color: var(--primary); font-weight: 600; }
+@media (max-width: 900px) {
+  nav.site a.tab-showcase { display: inline; font-size: 14px; white-space: nowrap; }
+}
+@media (max-width: 430px) {
+  /* a phone has room for the menu and the Showcase tab, not also GitHub; the home page keeps the GitHub link */
+  body:has(.layout) nav.site a.pill { display: none; }
+}

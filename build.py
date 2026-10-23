@@ -199,7 +199,7 @@ FOOTER = (
 )
 
 CARDS = [
-    (WALKTHROUGH, "Showcase: visual walkthrough", "Step through the real code line by line: a write, a stale cascade, rollback, compaction, and where memory lives."),
+    (WALKTHROUGH, "Showcase: visual walkthrough", "Step through how memory works: a write, a stale cascade, rollback, compaction, and where memory lives."),
     ("playground", "Playground", "Write memories into a log in the browser, retract a premise, and watch the cascade."),
     ("structure", "Declare a structure", "Kinds, scopes, and what must derive from what; every write is checked."),
     ("sessions", "Record sessions", "Each turn, tool call, and result is its own memory, committed as it happens."),
